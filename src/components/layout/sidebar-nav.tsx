@@ -8,7 +8,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { GraduationCap, ShieldCheck } from 'lucide-react';
+import { GraduationCap, ShieldCheck, Trophy } from 'lucide-react';
 import Link from 'next/link';
 
 const menuItems = [
@@ -21,6 +21,11 @@ const menuItems = [
     href: '/training',
     label: 'Training Ground',
     icon: GraduationCap,
+  },
+  {
+    href: '/leaderboard',
+    label: 'Leaderboard',
+    icon: Trophy,
   },
 ];
 
