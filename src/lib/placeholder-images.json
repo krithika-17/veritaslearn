@@ -1,3 +1,11 @@
+
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "fact-check-sample",
+      "description": "A sample image showing a shark swimming near a city street, often used in fake news about floods.",
+      "imageUrl": "https://picsum.photos/seed/shark-hoax/600/400",
+      "imageHint": "shark flood"
+    }
+  ]
 }
