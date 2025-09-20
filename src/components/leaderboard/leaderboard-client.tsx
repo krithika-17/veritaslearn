@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Award, Star } from 'lucide-react';
+import { Award } from 'lucide-react';
 import { LEVELS } from '@/lib/constants';
 import UserStats from '../training/user-stats';
 import { cn } from '@/lib/utils';
@@ -32,6 +32,40 @@ function getLevelForScore(score: number) {
   return LEVELS.slice().reverse().find((l) => score >= l.score) || LEVELS[0];
 }
 
+function UserRankCard({ rank, score }: { rank: number; score: number }) {
+  const level = getLevelForScore(score);
+  const nextLevel = LEVELS.find((l) => l.score > score);
+  const pointsToNext = nextLevel ? nextLevel.score - score : 0;
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Your Current Rank</CardTitle>
+        <CardDescription>Keep it up, truth-seeker!</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex items-center justify-center rounded-lg bg-muted p-6">
+          <div className="text-center">
+            <p className="font-headline text-6xl font-bold text-primary">#{rank}</p>
+            <p className="text-sm text-muted-foreground">{score} PTS</p>
+          </div>
+        </div>
+        <div className='text-center'>
+        {nextLevel ? (
+            <p className="text-sm text-muted-foreground">
+              You are <span className="font-bold text-primary">{pointsToNext}</span> points away from reaching the <span className="font-bold">{nextLevel.name}</span> level.
+            </p>
+          ) : (
+            <p className="text-sm font-bold text-accent">
+              You've reached the highest level!
+            </p>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 export default function LeaderboardClient() {
   const [currentUserScore, setCurrentUserScore] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
@@ -47,9 +81,11 @@ export default function LeaderboardClient() {
     { name: 'You', score: currentUserScore, avatar: '' },
   ].sort((a, b) => b.score - a.score);
 
+  const currentUserRank = leaderboardData.findIndex(u => u.name === 'You') + 1;
+
   if (!isMounted) {
     return (
-      <div className="grid gap-8 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
@@ -67,13 +103,19 @@ export default function LeaderboardClient() {
                 </CardHeader>
                 <CardContent className="h-[88px] animate-pulse rounded-md bg-muted" />
             </Card>
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle className="text-lg font-medium">Loading Rank...</CardTitle>
+                </CardHeader>
+                <CardContent className="h-[180px] animate-pulse rounded-md bg-muted" />
+            </Card>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-3">
+    <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
       <div className="md:col-span-2">
         <Card>
           <CardHeader>
@@ -94,7 +136,7 @@ export default function LeaderboardClient() {
                   const level = getLevelForScore(user.score);
                   const isCurrentUser = user.name === 'You';
                   return (
-                    <TableRow key={index} className={cn(isCurrentUser && 'bg-accent/50')}>
+                    <TableRow key={index} className={cn(isCurrentUser && 'bg-accent/20')}>
                       <TableCell className="font-bold">
                         <div className="flex items-center justify-center">
                             {index < 3 ? (
@@ -134,6 +176,7 @@ export default function LeaderboardClient() {
       </div>
       <div className="space-y-8">
         <UserStats />
+        <UserRankCard rank={currentUserRank} score={currentUserScore} />
       </div>
     </div>
   );
