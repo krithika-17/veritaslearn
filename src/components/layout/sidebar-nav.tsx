@@ -8,12 +8,17 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { GraduationCap, ShieldCheck, Trophy } from 'lucide-react';
+import { GraduationCap, ShieldCheck, Trophy, Home } from 'lucide-react';
 import Link from 'next/link';
 
 const menuItems = [
   {
     href: '/',
+    label: 'Home',
+    icon: Home,
+  },
+  {
+    href: '/fact-check',
     label: 'Fact Check',
     icon: ShieldCheck,
   },
